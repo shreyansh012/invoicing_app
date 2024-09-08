@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Invoice Item</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .item-detail {
+            margin-bottom: 15px;
+        }
+        .taxes {
+            margin-top: 20px;
+        }
+        .add-item-form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ item.name }}</h1>
+        <div class="item-detail">
+            <p><strong>Invoice:</strong> {{ item.invoice.invoice_number }}</p>
+            <p><strong>Price:</strong> {{ item.price }}</p>
+            <p><strong>Quantity:</strong> {{ item.quantity }}</p>
+            <p><strong>Total Price:</strong> {{ item.total_price }}</p>
+            <p><strong>Total Tax:</strong> {{ item.total_taxes }}</p>
+        </div>
+
+        <div class="taxes">
+            <h2>Taxes</h2>
+            <ul>
+                {% for tax in taxes %}
+                    <li>{{ tax.title }} ({{ tax.rate }}%): {{ tax.calculated_tax|floatformat:2 }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <h2>Add New Tax</h2>
+        <form method="post" class="add-item-form">
+            {% csrf_token %}
+            {{ tax_form.as_p }}
+            <button type="submit">Add Tax</button>
+        </form>
+        <br>
+        <a href = "{% url 'edit_invoice_item' item.id %}" class="edit-button">Edit Invoice Item</a>
+        <br>
+        <br>
+        <a href="{% url 'invoice_detail' item.invoice.id %}" class="back-button">Back to Invoice</a>
+    </div>
+</body>
+</html>

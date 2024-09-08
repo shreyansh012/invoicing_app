@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice {{ invoice.invoice_number }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        p {
+            font-size: 16px;
+            color: #555;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            background-color: #f9f9f9;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        ul ul {
+            margin-left: 20px;
+        }
+        ul ul li {
+            background-color: #e9e9e9;
+        }
+        .totals {
+            text-align: right;
+            font-size: 18px;
+            color: #333;
+        }
+        .back-button {
+            display: block;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .back-button a {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .back-button a:hover {
+            background-color: #45a049;
+        }
+        .add-item-form {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .add-item-form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .add-item-form button:hover {
+            background-color: #45a049;
+        }
+        .add-item-form input, .add-item-form select, .add-item-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .view-invoice-item {
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Invoice {{ invoice.invoice_number }}</h1>
+        <p>Date: {{ invoice.date }}</p>
+        <p>Currency: {{ invoice.currency }}</p>
+        <a href="{% url 'invoice_edit' invoice.id %}" class="edit-button">Edit Invoice</a>
+
+        <h2>Items</h2>
+        <ul>
+            {% for item in items_with_taxes %}
+                <li>
+                    <strong>{{ item.name }}</strong> - {{ invoice.currency }} {{ item.total_price }}
+                    <a href="{% url 'view_invoice_item' item.id %}" class="edit-button view-invoice-item">View Invoice Item</a>
+                    <ul>
+                        {% for tax in item.taxes %}
+                            <li>{{ tax.title }} ({{ tax.rate }}%): {{ tax.calculated_tax|floatformat:2 }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Add New Item</h2>
+        <form method="post" class="add-item-form">
+            {% csrf_token %}
+            {{ item_form.as_p }}
+            <button type="submit">Add Item</button>
+        </form>
+
+        <div class="totals">
+            <h2>Subtotal: {{ subtotal }}</h2>
+            <h2>Total Taxes: {{ total_taxes }}</h2>
+            <h2>Total: {{ total }}</h2>
+        </div>
+
+        <div class="back-button">
+            <a href="{% url 'invoice_list' %}">Back to Invoice List</a>
+        </div>
+    </div>
+</body>
+</html>

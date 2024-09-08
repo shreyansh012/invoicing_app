@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoices</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px;
+            text-align: center;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Invoices</h1>
+    </div>
+    <a href="{% url 'invoice_create' %}" class="button">Create New Invoice</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Invoice Number</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in invoices %}
+                <tr>
+                    <td>{{ invoice.invoice_number }}</td>
+                    <td><a href="{% url 'invoice_detail' invoice.pk %}">View Details</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
