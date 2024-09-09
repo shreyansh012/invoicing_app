@@ -42,3 +42,11 @@ python manage.py migrate
 ```
 python manage.py runserver
 ```
+7. Open browser and head to
+   ```
+   http://localhost:8000/invoices/
+   ```
+   or
+   ```
+   http://127.0.0.1:8000/invoices/
+   ```
